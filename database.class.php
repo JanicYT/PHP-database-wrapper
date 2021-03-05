@@ -4,9 +4,9 @@ class database {
 
     protected   $Connection;
 
-    function __construct($showErrors = false) {
+    function __construct(array $connectDetails, bool $showErrors = false) {
         try {
-            $this->Connection = new PDO(DBType.":host=".DBHost.";dbname=".DBName.";charset=utf8", DBUser, DBPassword, 
+            $this->Connection = new PDO($connectDetails["DBType"].":host=".$connectDetails["DBHost"].";dbname=".$connectDetails["DBName"].";charset=utf8", $connectDetails["DBUser"], $connectDetails["DBPassword"],
                     [
                         PDO::ATTR_EMULATE_PREPARES      => false,
                         PDO::ATTR_PERSISTENT            => true,
