@@ -41,7 +41,7 @@ class database {
     }
 
     // Selects columns according to the set where conditions
-    public function select(string $table, array $columns, array $where) : array {
+    public function select(string $table, array $columns, array $where = []) : array {
         // Get columns
         $selectSQL      = "";
         $Values_Array   = [];
@@ -100,15 +100,15 @@ class database {
     // Special column values:
         // 0 = NOW()
         // 1 = NULL
-    public function update(string $table, array $columns, array $where) : bool {
+    public function update(string $table, array $columns, array $where = []) : bool {
         // Get columns
         $valuesPrepare  = "";
         $Values_Array   = [];
         foreach ($columns as $column => $value) {
             if ($value !== null) {
                 if ($value !== 0 && $value !== 1) {
-                    $valuesPrepare              .= "$column = :".$column.",";
-                    $Values_Array[":".$column]   = $value;
+                    $valuesPrepare              .= "$column = :S".$column.",";
+                    $Values_Array[":S".$column]   = $value;
                 } elseif ($value === 1)  $valuesPrepare .= "$column = NOW(),";
                   elseif ($value === 2)  $valuesPrepare .= "$column = NULL,";
             }
@@ -125,14 +125,14 @@ class database {
             }
             $whereSQL = rtrim($whereSQL, "AND");
         }
-        
+
         // Execute query
         if ($this->query("UPDATE $table SET $valuesPrepare $whereSQL", false, $Values_Array))   return true;
         else                                                                                              return false;
     }
 
     // Deletes the row according to the set WHERE array
-    public function delete(string $table, array $where) : bool {
+    public function delete(string $table, array $where = []) : bool {
         // Generate where conditions
         $whereSQL = "";
         if ($where) {
@@ -166,7 +166,7 @@ class database {
         else                return false;
     }
     
-    public function count(string $table, array $where) : int {
+    public function count(string $table, array $where = []) : int {
         // Generate where conditions
         $Values_Array   = [];
         $whereSQL       = "";
